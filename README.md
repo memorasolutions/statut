@@ -2,6 +2,8 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/memora/statut.svg)](https://packagist.org/packages/memora/statut)
 [![Total Downloads](https://img.shields.io/packagist/dt/memora/statut.svg)](https://packagist.org/packages/memora/statut)
+[![Tests](https://github.com/memorasolutions/statut/actions/workflows/tests.yml/badge.svg)](https://github.com/memorasolutions/statut/actions/workflows/tests.yml)
+[![PHP Version](https://img.shields.io/packagist/php-v/memora/statut.svg)](https://packagist.org/packages/memora/statut)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Une page de statut publique pour vos applications Laravel, prête à brancher sur une plateforme de monitoring tierce (Robotalp aujourd'hui, d'autres demain), entièrement traduite (FR par défaut, EN inclus), accessible (WCAG 2.2 AA), responsive, avec mode sombre automatique et zéro dépendance frontale.
