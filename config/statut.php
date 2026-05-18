@@ -43,9 +43,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Liste des middleware à appliquer à la route de statut.
+    | Le throttle par défaut limite à 60 requêtes par minute par IP afin d'éviter
+    | qu'une rafale ne sature l'API du fournisseur de surveillance distant.
     |
     */
-    'route_middleware' => ['web'],
+    'route_middleware' => ['web', 'throttle:60,1'],
 
     /*
     |--------------------------------------------------------------------------
@@ -81,16 +83,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Langue par défaut
-    |--------------------------------------------------------------------------
-    |
-    | Langue utilisée si l'application hôte n'en impose pas une autre.
-    |
-    */
-    'locale_default' => 'fr',
-
-    /*
-    |--------------------------------------------------------------------------
     | Marque (branding)
     |--------------------------------------------------------------------------
     |
@@ -98,8 +90,8 @@ return [
     |
     */
     'brand' => [
-        'name' => env('STATUT_BRAND_NAME', 'MEMORA solutions'),
-        'url'  => env('STATUT_BRAND_URL', 'https://memora.solutions'),
+        'name' => env('STATUT_BRAND_NAME'),
+        'url'  => env('STATUT_BRAND_URL'),
         'logo' => env('STATUT_BRAND_LOGO'),
     ],
 

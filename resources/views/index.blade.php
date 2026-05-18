@@ -194,16 +194,18 @@
 
     <main class="statut-page" role="main" aria-label="{{ __('statut::messages.page_title') }}">
         <header class="statut-header">
-            <div class="statut-brand">
-                @if(!empty($brand['logo']))
-                    <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] ?? '' }}" loading="lazy">
-                @endif
-                @if(!empty($brand['url']))
-                    <a href="{{ $brand['url'] }}" class="statut-brand-name" rel="noopener">{{ $brand['name'] ?? '' }}</a>
-                @else
-                    <span class="statut-brand-name">{{ $brand['name'] ?? '' }}</span>
-                @endif
-            </div>
+            @if(!empty($brand['name']) || !empty($brand['logo']))
+                <div class="statut-brand">
+                    @if(!empty($brand['logo']))
+                        <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] ?? '' }}" loading="lazy">
+                    @endif
+                    @if(!empty($brand['url']))
+                        <a href="{{ $brand['url'] }}" class="statut-brand-name" rel="noopener noreferrer">{{ $brand['name'] ?? '' }}</a>
+                    @elseif(!empty($brand['name']))
+                        <span class="statut-brand-name">{{ $brand['name'] }}</span>
+                    @endif
+                </div>
+            @endif
             <div class="statut-title-block">
                 <h1>{{ __('statut::messages.page_title') }}</h1>
                 <p class="statut-subtitle">{{ __('statut::messages.page_subtitle') }}</p>
@@ -243,9 +245,11 @@
         <footer class="statut-footer">
             <small>
                 {{ __('statut::messages.refreshed_every_60s') }}
-                @if(!empty($brand['url']))
+                @if(!empty($brand['name']) && !empty($brand['url']))
                     —
-                    <a href="{{ $brand['url'] }}" rel="noopener">{{ $brand['name'] ?? '' }}</a>
+                    <a href="{{ $brand['url'] }}" rel="noopener noreferrer">{{ $brand['name'] }}</a>
+                @elseif(!empty($brand['name']))
+                    — {{ $brand['name'] }}
                 @endif
             </small>
         </footer>

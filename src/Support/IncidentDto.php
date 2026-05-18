@@ -8,7 +8,7 @@ readonly class IncidentDto
 {
     public function __construct(
         public string $id,
-        public int|string $monitorId,
+        public ?int $monitorId,
         public string $monitorName,
         public string $startedAt,
         public ?string $endedAt,
@@ -26,7 +26,7 @@ readonly class IncidentDto
 
         return new self(
             id:           (string) ($row['id'] ?? $row['incident_id'] ?? ''),
-            monitorId:    $monitor['id'] ?? ($row['robot_id'] ?? 0),
+            monitorId:    isset($monitor['id']) ? (int) $monitor['id'] : (isset($row['robot_id']) ? (int) $row['robot_id'] : null),
             monitorName:  (string) ($monitor['name'] ?? ($row['robot_name'] ?? '')),
             startedAt:    (string) ($row['started_at'] ?? $row['start_time'] ?? ''),
             endedAt:      $row['ended_at'] ?? null,

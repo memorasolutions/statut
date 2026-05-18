@@ -34,10 +34,20 @@ final class StatutController extends Controller
             $incidents = [];
         }
 
+        $layout = config('statut.layout', 'layouts.app');
+        if (! is_string($layout) || ! preg_match('/^[A-Za-z0-9._-]+$/', $layout)) {
+            $layout = 'layouts.app';
+        }
+
+        $section = config('statut.section', 'content');
+        if (! is_string($section) || ! preg_match('/^[a-z0-9_-]+$/', $section)) {
+            $section = 'content';
+        }
+
         return view('statut::index', compact('overview', 'monitors', 'incidents'))
             ->with([
-                'layout'   => config('statut.layout', 'layouts.app'),
-                'section'  => config('statut.section', 'content'),
+                'layout'   => $layout,
+                'section'  => $section,
                 'brand'    => config('statut.brand', []),
                 'hasError' => $overview === null,
             ]);

@@ -21,6 +21,21 @@ final class RobotalpProvider implements MonitoringProvider
      */
     public function __construct(private readonly array $config)
     {
+        if (empty($this->config['api_key'])) {
+            throw new StatutProviderException(
+                'Robotalp',
+                0,
+                "Clef API Robotalp manquante. Définissez STATUT_ROBOTALP_API_KEY dans votre fichier .env.",
+            );
+        }
+
+        if (empty($this->config['workspace_id'])) {
+            throw new StatutProviderException(
+                'Robotalp',
+                0,
+                "Identifiant d'espace de travail Robotalp manquant. Définissez STATUT_ROBOTALP_WORKSPACE_ID dans votre fichier .env.",
+            );
+        }
     }
 
     private function http(): PendingRequest

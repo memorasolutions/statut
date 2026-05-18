@@ -10,6 +10,10 @@
         }
     ],
     "homepage": "https://memora.solutions",
+    "support": {
+        "issues": "https://github.com/memorasolutions/statut/issues",
+        "source": "https://github.com/memorasolutions/statut"
+    },
     "keywords": [
         "laravel",
         "status-page",
@@ -21,7 +25,7 @@
     "require": {
         "php": ">=8.2",
         "illuminate/support": "^10|^11|^12",
-        "guzzlehttp/guzzle": "^7.5"
+        "illuminate/http": "^10|^11|^12"
     },
     "require-dev": {
         "orchestra/testbench": "^8|^9|^10",

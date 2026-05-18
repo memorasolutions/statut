@@ -80,6 +80,8 @@ STATUT_HIDDEN_MONITORS=99999,88888
 
 La page de statut étend le layout défini par `STATUT_LAYOUT` (`layouts.app` par défaut) et injecte son contenu dans la section `STATUT_SECTION` (`content` par défaut). Assurez-vous que votre layout Blade contient bien `@yield('content')` (ou ajustez `STATUT_SECTION` au nom utilisé chez vous).
 
+> **Accessibilité** — la page hérite de l'attribut `<html lang>` du layout hôte. Pour une lecture correcte par les lecteurs d'écran, votre layout doit déclarer `<html lang="fr">` (ou la langue appropriée). Le paquet ne peut pas définir cet attribut lui-même puisqu'il s'insère à l'intérieur du layout existant.
+
 ### Personnaliser les vues
 
 Si vous avez publié les vues (`statut-views`), modifiez-les dans `resources/views/vendor/statut`. Le CSS est scopé sous `.statut-page` ; vous pouvez le surcharger sans risque de conflit.
