@@ -1,0 +1,55 @@
+{
+    "name": "memora/statut",
+    "description": "Page de statut publique multilingue pour applications Laravel, multi-provider (Robotalp et plus).",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MEMORA solutions",
+            "email": "info@memora.ca",
+            "homepage": "https://memora.solutions"
+        }
+    ],
+    "homepage": "https://memora.solutions",
+    "keywords": [
+        "laravel",
+        "status-page",
+        "monitoring",
+        "robotalp",
+        "uptime",
+        "statut"
+    ],
+    "require": {
+        "php": ">=8.2",
+        "illuminate/support": "^10|^11|^12",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8|^9|^10",
+        "pestphp/pest": "^2|^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Memora\\Statut\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Memora\\Statut\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Memora\\Statut\\StatutServiceProvider"
+            ],
+            "aliases": {
+                "Statut": "Memora\\Statut\\Facades\\Statut"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "pest"
+    }
+}
