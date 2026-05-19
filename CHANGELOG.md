@@ -2,6 +2,14 @@
 
 Toutes les modifications notables sont listées ici. Le format suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et le paquet adhère au [versionnement sémantique](https://semver.org/lang/fr/).
 
+## [0.1.4] — 2026-05-19
+
+### Corrigé
+
+- **`IncidentDto` — timestamps Robotalp** — l'API Robotalp renvoie `started_at` et `ended_at` sous forme d'entier Unix en millisecondes (ex : `1779140556104`). La v0.1.3 passait cette valeur brute à `Carbon::parse()`, ce qui levait `Failed to parse time string`. Le DTO normalise désormais toute valeur numérique vers une chaîne ISO 8601 (`gmdate('c', …)`), avec division automatique ms → s. Les chaînes ISO déjà valides passent inchangées.
+
+---
+
 ## [0.1.3] — 2026-05-19
 
 ### Corrigé

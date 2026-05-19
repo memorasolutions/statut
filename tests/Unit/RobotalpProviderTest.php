@@ -132,7 +132,7 @@ it('fetches active incidents via the incident endpoint with status_id=0', functi
                 [
                     'id'          => 'inc-1',
                     'robot'       => ['id' => 101, 'name' => 'Web'],
-                    'started_at'  => '2026-05-19T10:00:00Z',
+                    'started_at'  => 1779140556104,
                     'ended_at'    => null,
                     'resolved'    => false,
                     'cause'       => 'timeout',
@@ -147,7 +147,8 @@ it('fetches active incidents via the incident endpoint with status_id=0', functi
         ->and($incidents[0]->id)->toBe('inc-1')
         ->and($incidents[0]->monitorId)->toBe(101)
         ->and($incidents[0]->monitorName)->toBe('Web')
-        ->and($incidents[0]->resolved)->toBeFalse();
+        ->and($incidents[0]->resolved)->toBeFalse()
+        ->and($incidents[0]->startedAt)->toMatch('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/');
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'incident')
