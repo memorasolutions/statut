@@ -42,7 +42,7 @@ final class RobotalpProvider implements MonitoringProvider
     {
         return Http::baseUrl(rtrim((string) ($this->config['base_url'] ?? 'https://api.robotalp.com'), '/'))
             ->withHeaders([
-                'Authorization' => 'Token '.(string) ($this->config['api_key'] ?? ''),
+                'Authorization' => 'ApiKey '.(string) ($this->config['api_key'] ?? ''),
                 'Accept'        => 'application/json',
             ])
             ->timeout(10)
@@ -86,7 +86,7 @@ final class RobotalpProvider implements MonitoringProvider
 
     private function buildOverview(): Overview
     {
-        $data    = $this->fetch("workspace/{$this->config['workspace_id']}/robots/status/", 'overview');
+        $data    = $this->fetch("robot/status/{$this->config['workspace_id']}/", 'overview');
         $payload = (array) ($data['data'] ?? []);
 
         return new Overview(
@@ -101,7 +101,7 @@ final class RobotalpProvider implements MonitoringProvider
     public function listMonitors(): array
     {
         return $this->remember("monitors.{$this->config['workspace_id']}", function (): array {
-            $data = $this->fetch("workspace/{$this->config['workspace_id']}/robots/?per_page=100", 'listMonitors');
+            $data = $this->fetch("robot/?workspace_id={$this->config['workspace_id']}&per_page=100", 'listMonitors');
             $rows = (array) ($data['data'] ?? []);
 
             return array_map(static fn (array $r): MonitorDto => MonitorDto::fromRobotalp($r), $rows);
@@ -111,7 +111,8 @@ final class RobotalpProvider implements MonitoringProvider
     public function getMonitor(int|string $id): MonitorDto
     {
         return $this->remember("monitor.{$id}", function () use ($id): MonitorDto {
-            $data = $this->fetch("robot/{$id}/", "getMonitor({$id})");
+            // Pas de slash final : l'API Robotalp redirige avec 301 sinon, et le header Authorization est perdu sur le redirect.
+            $data = $this->fetch("robot/{$id}", "getMonitor({$id})");
             $row  = (array) ($data['data']['robot'] ?? $data['data'] ?? $data);
 
             return MonitorDto::fromRobotalp($row);
@@ -121,7 +122,7 @@ final class RobotalpProvider implements MonitoringProvider
     public function getActiveIncidents(): array
     {
         return $this->remember("incidents.{$this->config['workspace_id']}", function (): array {
-            $data = $this->fetch("workspace/{$this->config['workspace_id']}/incident/active/", 'getActiveIncidents');
+            $data = $this->fetch("incident/?workspace_id={$this->config['workspace_id']}&status_id=0", 'getActiveIncidents');
             $rows = (array) ($data['data'] ?? []);
 
             return array_map(static fn (array $r): IncidentDto => IncidentDto::fromRobotalp($r), $rows);
@@ -131,7 +132,7 @@ final class RobotalpProvider implements MonitoringProvider
     public function getMonitorDashboard(int|string $id): Dashboard
     {
         return $this->remember("dashboard.{$id}", function () use ($id): Dashboard {
-            $data = $this->fetch("robot/{$id}/", "getMonitorDashboard({$id})");
+            $data = $this->fetch("robot/{$id}/dashboard", "getMonitorDashboard({$id})");
             $row  = (array) ($data['data'] ?? $data);
 
             return Dashboard::fromRobotalp($row);

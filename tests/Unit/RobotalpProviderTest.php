@@ -20,7 +20,7 @@ function makeProvider(): RobotalpProvider
 
 it('maps the overview payload correctly', function () {
     Http::fake([
-        'api.robotalp.com/workspace/999/robots/status/' => Http::response([
+        'api.robotalp.com/robot/status/999/' => Http::response([
             'status' => true,
             'data'   => [
                 'total'            => 3,
@@ -45,7 +45,7 @@ it('maps the overview payload correctly', function () {
 
 it('lists monitors as MonitorDto with correct status mapping', function () {
     Http::fake([
-        'api.robotalp.com/workspace/999/robots*' => Http::response([
+        'api.robotalp.com/robot*' => Http::response([
             'status' => true,
             'data'   => [
                 [
@@ -82,7 +82,7 @@ it('lists monitors as MonitorDto with correct status mapping', function () {
 
 it('throws StatutProviderException on HTTP 500', function () {
     Http::fake([
-        'api.robotalp.com/workspace/999/robots/status/' => Http::response(['detail' => 'boom'], 500),
+        'api.robotalp.com/robot/status/999/' => Http::response(['detail' => 'boom'], 500),
     ]);
 
     makeProvider()->getOverview();
@@ -90,7 +90,7 @@ it('throws StatutProviderException on HTTP 500', function () {
 
 it('caches identical calls', function () {
     Http::fake([
-        'api.robotalp.com/workspace/999/robots/status/' => Http::response([
+        'api.robotalp.com/robot/status/999/' => Http::response([
             'status' => true,
             'data'   => [
                 'total'            => 1,
@@ -107,4 +107,51 @@ it('caches identical calls', function () {
     $p->getOverview();
 
     Http::assertSentCount(1);
+});
+
+it('uses the ApiKey scheme in the Authorization header', function () {
+    Http::fake([
+        'api.robotalp.com/robot/status/999/' => Http::response([
+            'status' => true,
+            'data'   => ['total' => 0, 'up' => 0, 'down' => 0, 'paused' => 0, 'active_incidents' => 0],
+        ]),
+    ]);
+
+    makeProvider()->getOverview();
+
+    Http::assertSent(function ($request) {
+        return $request->hasHeader('Authorization', 'ApiKey test');
+    });
+});
+
+it('fetches active incidents via the incident endpoint with status_id=0', function () {
+    Http::fake([
+        'api.robotalp.com/incident*' => Http::response([
+            'status' => true,
+            'data'   => [
+                [
+                    'id'          => 'inc-1',
+                    'robot'       => ['id' => 101, 'name' => 'Web'],
+                    'started_at'  => '2026-05-19T10:00:00Z',
+                    'ended_at'    => null,
+                    'resolved'    => false,
+                    'cause'       => 'timeout',
+                ],
+            ],
+        ]),
+    ]);
+
+    $incidents = makeProvider()->getActiveIncidents();
+
+    expect($incidents)->toHaveCount(1)
+        ->and($incidents[0]->id)->toBe('inc-1')
+        ->and($incidents[0]->monitorId)->toBe(101)
+        ->and($incidents[0]->monitorName)->toBe('Web')
+        ->and($incidents[0]->resolved)->toBeFalse();
+
+    Http::assertSent(function ($request) {
+        return str_contains($request->url(), 'incident')
+            && str_contains($request->url(), 'workspace_id=999')
+            && str_contains($request->url(), 'status_id=0');
+    });
 });
