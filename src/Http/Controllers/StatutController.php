@@ -35,7 +35,9 @@ final class StatutController extends Controller
         }
 
         $layout = config('statut.layout', 'layouts.app');
-        if (! is_string($layout) || ! preg_match('/^[A-Za-z0-9._-]+$/', $layout)) {
+        // Le ":" est autorisé pour les vues namespacées (ex: "fronttheme::layouts.master"),
+        // syntaxe Blade standard pour les paquets et modules (nwidart, Filament, etc.).
+        if (! is_string($layout) || ! preg_match('/^[A-Za-z0-9._:-]+$/', $layout)) {
             $layout = 'layouts.app';
         }
 
